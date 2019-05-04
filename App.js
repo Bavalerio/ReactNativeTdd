@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button } from 'react-native';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -18,12 +18,29 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+
+  state = {
+    helloMessage: '',
+  }
+
+  showHello = () => {
+    this.setState({ helloMessage: 'Hello!!!'})
+  }
+
+  showWorld = () => {
+    this.setState({ helloMessage: 'World!!!'})
+  }
+
   render() {
+    const { helloMessage } = this.state;
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
+        <Text style={styles.welcome} testID='welcome'>Welcome to React Native!</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
+        <Button testID='hello_button' title="Hello"  onPress={this.showHello} />
+        <Text style={styles.instructions}>{helloMessage}</Text>
+        <Button testID='world_button' title="World"  onPress={this.showWorld} />
       </View>
     );
   }
