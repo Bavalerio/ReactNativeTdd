@@ -1,66 +1,36 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from "react";
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button } from 'react-native';
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import createSagaMiddleware from "redux-saga";
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import { reducer } from "./src/redux";
+import { watcherSaga } from "./src/sagas";
+
+import PokemonLoader from "./src/components/PokemonLoader";
+
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(watcherSaga);
 
 type Props = {};
 export default class App extends Component<Props> {
-
-  state = {
-    helloMessage: '',
-  }
-
-  showHello = () => {
-    this.setState({ helloMessage: 'Hello!!!'})
-  }
-
-  showWorld = () => {
-    this.setState({ helloMessage: 'World!!!'})
-  }
-
   render() {
-    const { helloMessage } = this.state;
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome} testID='welcome'>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-        <Button testID='hello_button' title="Hello"  onPress={this.showHello} />
-        <Text style={styles.instructions}>{helloMessage}</Text>
-        <Button testID='world_button' title="World"  onPress={this.showWorld} />
-      </View>
+      <Provider store={store}>
+        <PokemonLoader />
+      </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
+  }
+};
